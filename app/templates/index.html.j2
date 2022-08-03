@@ -1,6 +1,6 @@
 {% extends 'base.html.j2' %}
 {% block css %}
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="../static/css/main.css"/>
 {% endblock %}
 
 {% block title %}
@@ -8,23 +8,14 @@
 {% endblock %}
 
 {% block content %}
-<h1>!!!!! POKEMON !!!!!</h1>
-<h5>Gotta Catch'em All!</h5>
-<form action="/pokemon" method="GET">
-  <div class="mb-1">
-    <label for="name" class="form-label">Select A Pokemon</label>
+<div id="pokesearch"> 
+<form action="/pokemon" method="POST">
+  <div class="mb-1 justify-content-center">
+  <h1 strong="text-align: center">Enter a Pokemon Name</h1>
+    <label for="name" class="form-label"></label>
     <input type="text" name = "name" class="form-control" id="name">
   </div>
-  <button type="search" class="btn btn-primary">Search</button>
-
-{% if pokes %}
-  <h5>{pokes.name}</h5>
-{% endif %}
-
-{% if not pokes %}
-  <h5>{pokes.name}</h5>
-{% endif %}
-
-
-</form>    
+  <button type="search" class="btn btn-primary">Find It!</button>
+</form>  
+</div>
 {% endblock %}

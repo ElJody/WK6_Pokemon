@@ -1,3 +1,10 @@
-.mb-1{
-    width: 200px;
+#pokesearch{
+    margin:auto;
+    width:50%;
 }
+
+body {
+    background-image: url(../images/cartoonback.webp);
+    background-size: cover;
+}
+

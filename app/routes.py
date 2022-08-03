@@ -5,13 +5,15 @@ from app.forms import FindPokemon
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html.j2')
+    form=FindPokemon()
+    return render_template('index.html.j2', form=form)
 
 @app.route('/pokemon', methods=['GET', 'POST'])
 def pokemon():
     form = FindPokemon()
     if request.method =='POST':
-        pokemon_name = form.pokemon_name.data.lower()
+        pokemon_name = form.pokemon_name.data
+        print(pokemon_name)
         url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_name}/'
         response = requests.get(url)
         if not response.ok:

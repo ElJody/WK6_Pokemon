@@ -1,12 +1,18 @@
 from flask import render_template, request
 import requests
 from app import app
-from app.forms import FindPokemon
+from app.forms import FindPokemon, LoginForm
 
 @app.route('/', methods=['GET'])
 def index():
     form=FindPokemon()
     return render_template('index.html.j2', form=form)
+
+@app.route('/login', methods=['GET'])
+def login():
+    form=LoginForm()
+    return render_template('login.html.j2', form=form)
+
 
 @app.route('/pokemon', methods=['GET', 'POST'])
 def pokemon():
@@ -25,7 +31,7 @@ def pokemon():
             poke_dict={
                 "name": data['name'].title(),
                 "ability":data['abilities'][0]["ability"]["name"],
-                "base experiance":data['base_experience'],
+                "base experience":data['base_experience'],
                 "photo":data['sprites']['other']['home']["front_default"],
                 "attack base stat": data['stats'][1]['base_stat'],
                 "hp base stat":data['stats'][0]['base_stat'],

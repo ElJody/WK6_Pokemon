@@ -11,9 +11,9 @@
 <div id="pokesearch">
 <form action="{{url_for('pokemon')}}" method="POST">
         {{form.hidden_tag()}}
-        <div class="mb-3">
+        <div class="mb-3 justify-content-center">
             {{form.pokemon_name.label(class="form-label")}}
-            {{form.pokemon_name(class="form-control", style= "width:30%;")}}
+            {{form.pokemon_name(class="form-control", style= "width: 20rem; height: 30%")}}
             {% for error in form.pokemon_name.errors%}
                 <p>{{error}}</p>
             {% endfor %}
@@ -22,15 +22,6 @@
           {{form.submit(class="btn btn-primary")}}<br>
           <p>{{error}}</p>
         </div>
-      </form>
+</form>
 
-{# <form action="/pokemon" method="POST">
-  <div class="mb-1 justify-content-center">
-  <h1 strong="text-align: center">Enter a Pokemon Name</h1>
-    <label for="name" class="form-label"></label>
-    <input type="text" name = "name" class="form-control" id="name">
-  </div>
-  <button type="search" class="btn btn-primary">Find It!</button>
-</form>   #}
-</div>
 {% endblock %}

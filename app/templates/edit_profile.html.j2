@@ -1,12 +1,12 @@
 {% extends 'base.html.j2'%}
 {% block title %}
-    Register
+    Edit Profile
 {% endblock %}
 
 {% block content %}
-    <div id="registeruser">
-    <h1>Register</h1>
-    <form action="{{url_for('register')}}" method="POST">
+    <div id="edituser">
+    <h1>Edit</h1>
+    <form action="{{url_for('edit_profile')}}" method="POST">
     {{form.hidden_tag()}}
     <div class="mb-3">
         {{form.first_name.label(class="form-label")}}

@@ -1,20 +1,40 @@
-<ul class="nav navbar-light bg-light justify-content-center">
+
+<nav class="navbar navbar-expand-lg bg-light justify-content-center">
+  <div class="container-fluid justify-content-center">    
+  <ul class="nav navbar-light bg-light justify-content-center">
   <li class="nav-item">
     <a class="nav-link active" href="{{url_for('index')}}">Home</a>
   </li>
+  {% if not current_user.is_authenticated %}
   <li class="nav-item">
     <a class="nav-link" href="{{url_for('login')}}">Login</a>
   </li>
-    <li class="nav-item">
-  <a class="navbar-brand" href="#">JoPoke's Revenge</a>
-  </li>
   <li class="nav-item">
-    <a class="nav-link" href="{{url_for('pokemon')}}">Search</a>
+  <a class="navbar-brand" href="#">JoPoke's Revenge</a>
   </li>
   <li class="nav-item">
     <a class="nav-link " href="{{url_for('register')}}">Register</a>
   </li>
+   <li class="nav-item">
+    <a class="nav-link" href="{{url_for('pokemon')}}">Find Pokemon</a>
+  </li>
+  {% else %}
+<li class="nav-item">
+    <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
+  </li>
+  <li class="nav-item">
+    <a class="navbar-brand" href="#">JoPoke's Revenge</a>
+   {# <link rel="icon" size="32x32" href="{{url_for('static',filename='imagesimages/favicon-32x32.png')}}"> #}
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="{{url_for('edit_profile')}}">Edit Profile</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{url_for('pokemon')}}">Find Pokemon</a>
+  </li>
+  {% endif %}
 </ul>
+</nav>
 
 
 

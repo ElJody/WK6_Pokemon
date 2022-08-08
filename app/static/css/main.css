@@ -1,6 +1,10 @@
-#pokesearch{
+#pokesearch, #userlogin, #registeruser, #edituser{
     margin:auto;
-    width:50%;
+    width:40%;
+    height:75%;
+    /* background-color: #f2f2f2;
+    border-radius: 50px;
+    padding: 30px; */
 }
 
 body {
@@ -8,3 +12,22 @@ body {
     background-size: cover;
 }
 
+.nav-link, .navbar-brand {
+    border-radius: 50px;
+    padding: 25px;
+    font-size: 20px;
+}
+
+.mb-1{
+    width: 400px;
+}
+
+.mb-3{
+    width: 400px;
+}
+
+#poke_img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

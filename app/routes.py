@@ -79,7 +79,7 @@ def pokemon():
         url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_name}/'
         response = requests.get(url)
         if not response.ok:
-            error_string = "No Pokemon Found, Try Again..."
+            error_string = ("No Pokemon Found, Try Again...",  "alert") 
             return render_template('pokemon.html.j2', error=error_string,form=form)
         data = response.json()
         for pokemon in data:
@@ -96,18 +96,20 @@ def pokemon():
         return render_template('pokemon.html.j2', pokemon=poke_dict, form=form) 
     return render_template('pokemon.html.j2', form=form)
 
-@app.route('/catch_pokemon', methods=['GET', 'POST'])
+@app.route('/catch_pokemon/<pokemon_name>', methods=['GET', 'POST'])
 @login_required
-def catch_pokemon():
-    form = PokemonForm()
-    if request.method == 'POST':
+def catch_pokemon(pokemon_name):
+    form=FindPokemon()
+   
+    new_pokemon = Pokemon.query.get(pokemon_name)
+
+    if not new_pokemon:
         # poke_name = form.poke_name.data.lower()
-        name = request.form.get('name')
-        url = f'https://pokeapi.co/api/v2/pokemon/{name}/'
+        url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_name.lower()}/'
         response = requests.get(url)
-        if not response.ok:
-            error_string = "Invalid selection, try again."
-            return render_template('pokemon.html.j2', error=error_string)
+        # if not response.ok:
+        #     error_string = "Invalid selection, try again."
+            # return render_template('pokemon.html.j2', error=error_string)
         
         data = response.json()
         poke_dict={
@@ -117,31 +119,23 @@ def catch_pokemon():
             "attack_base_stat": data['stats'][1]['base_stat'],
             "hp_base_stat":data['stats'][0]['base_stat'],
             "defense_stat":data['stats'][2]["base_stat"],
-            "photo":data['sprites']['other']['home']["front_default"],
-            "user_id": current_user.id
-        }
-        new_pokemon = Pokemon(**poke_dict)
-#        new_pokemon = Pokemon()
+            "image":data['sprites']['other']['home']["front_default"],
+            }
+        new_pokemon = Pokemon()
         new_pokemon.from_dict(poke_dict)
         new_pokemon.save_poke()
 
-        poke2 = Pokemon.query.filter_by(name=name.lower()).first()
-        print(poke2)
-        print(current_user)
-        print(current_user.pokemon)
-        current_user.pokemon = poke2.id
-        print(current_user.pokemon)
-        current_user.save()
-        poke2.save_poke()
-
-        flash(f'You caught {poke2.name.title()}!', 'success')
+    if current_user.check_team_length():
+        flash('You have reached the max number of pokemon in your team!', 'warning')
+        return redirect(url_for('pokemon'))
         
-        return render_template('search.html.j2', pokemon=poke_dict)
-
+    elif current_user.check_team(new_pokemon):
+        flash('You already have this pokemon in your team!', 'warning')
+        return redirect(url_for('pokemon'))
     else:
-        error = 'error'
-        return render_template('search.html.j2', poke=error)
-
+        current_user.catch_pokemon(new_pokemon)
+        flash('You have caught a pokemon!', 'success')
+        return redirect(url_for('pokemon'))
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required

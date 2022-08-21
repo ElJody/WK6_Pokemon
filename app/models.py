@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 #     return u.check_hashed_password(password)
 
 user_poke = db.Table("user_poke",
-     db.Column("pokemon_id", db.Integer, db.ForeignKey("pokemon.id")),
+     db.Column("pokemon_name", db.String, db.ForeignKey("pokemon.name")),
      db.Column("user_id", db.Integer, db.ForeignKey("user.id"))
 )
 
@@ -25,6 +25,7 @@ class User(UserMixin, db.Model):
     last_name = db.Column(db.String)
     email = db.Column(db.String, unique=True, index=True)
     password = db.Column(db.String)
+    pokemon = db.relationship("Pokemon", secondary=user_poke, backref="trainer", lazy="dynamic")
        
     def __repr__(self):
         return f'<User: {self.email} | {self.id}>'
@@ -48,17 +49,19 @@ class User(UserMixin, db.Model):
         self.email = data['email']
         self.password = self.hash_password(data['password'])
     
-    def catch_pokemon(self, poke_dict):
-        self.name = poke_dict['name']
-        self.ability = poke_dict['ability']
-        self.base_experience = poke_dict['base_experience']
-        self.attack_base_stat = poke_dict['attack_base_stat']
-        self.hp_base_stat = poke_dict['hp_base_stat']
-        self.defense_stat = poke_dict['defense_stat']
-
+    def catch_pokemon(self, poke):
+        self.pokemon.append(poke)
+        db.session.commit()
+      
+    def check_team (self, poke):
+        return poke in self.pokemon.all()
+        
     def delete(self):
         db.session.delete(self) # remove the user from the session
         db.session.commit() # save the stuff in the session to the database
+
+    def check_team_length(self):
+        return len(self.pokemon.all()) >= 5
 
 @login.user_loader
 def load_user(id):
@@ -67,14 +70,13 @@ def load_user(id):
 class Pokemon(db.Model):
     __tablename__ = 'pokemon'
 
-    id= db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+    name = db.Column(db.String, primary_key=True)
     ability = db.Column(db.String)
     base_experience = db.Column(db.String)
     attack_base_stat = db.Column(db.String)
     hp_base_stat = db.Column(db.String)
     defense_stat = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    image = db.Column(db.String)
     
     def __repr__(self):
         return f'<Pokemon: {self.name}> | Id: {self.id}'
@@ -86,6 +88,7 @@ class Pokemon(db.Model):
         self.attack_base_stat = poke_dict['attack_base_stat']
         self.hp_base_stat = poke_dict['hp_base_stat']
         self.defense_stat = poke_dict['defense_stat']  
+        self.image = poke_dict['image']
 
     def save_poke(self):
         db.session.add(self)
